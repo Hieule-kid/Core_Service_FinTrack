@@ -1,0 +1,18 @@
+<settings xmlns="http://maven.apache.org/SETTINGS/1.0.0"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0 https://maven.apache.org/xsd/settings-1.0.0.xsd">
+    <!--
+        Credentials only — pulled from env vars, never hardcoded here.
+        Set GITHUB_ACTOR (your GitHub username) and GITHUB_TOKEN (a PAT
+        with write:packages, to publish core; read:packages is enough
+        for auth-service/planning-service to just consume it) before
+        running any `./mvnw -s settings.xml ...` command. See README.
+    -->
+    <servers>
+        <server>
+            <id>github</id>
+            <username>${env.GITHUB_ACTOR}</username>
+            <password>${env.GITHUB_TOKEN}</password>
+        </server>
+    </servers>
+</settings>

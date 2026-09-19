@@ -6,12 +6,19 @@ This is a plain Maven **library** (`packaging=jar`, no `spring-boot-maven-plugin
 
 ## Consumers
 
-`auth-service` ([Auth_Service_FinTrack](https://github.com/Hieule-kid/Auth_Service_FinTrack)) and `planning-service` ([Planning_Service_FinTrack](https://github.com/Hieule-kid/Planning_Service_FinTrack)) depend on this library via a **git submodule** checked out at `core/` in their own repos, built together with their own module in the same Maven reactor (`mvnw package -pl <service> -am`). `config-service` does not depend on `core`.
+`auth-service` ([Auth_Service_FinTrack](https://github.com/Hieule-kid/Auth_Service_FinTrack)) and `planning-service` ([Planning_Service_FinTrack](https://github.com/Hieule-kid/Planning_Service_FinTrack)) depend on `com.fintrack:core` as an ordinary Maven dependency, resolved from **GitHub Packages** (`https://maven.pkg.github.com/Hieule-kid/Core_Service_FinTrack`). There is no git submodule and no vendored/copied source anywhere anymore — each service repo is fully self-contained and builds independently. `config-service` does not depend on `core`.
 
-There is no published artifact registry for `core` — consumers always build it from source via the submodule. When you change `core`:
+## Publishing a change
 
-1. Commit and push the change here.
-2. In each consuming repo, `cd core && git pull origin main` (or `git submodule update --remote`), then commit the updated submodule pointer.
+GitHub Packages requires authentication to publish, even to a public repo:
+
+1. Create a classic PAT with the `write:packages` scope.
+2. Export it: `export GITHUB_ACTOR=<your-github-username> GITHUB_TOKEN=<your-pat>`.
+3. Bump `<version>` in `pom.xml` if this is a real release (don't silently overwrite a version consumers already pinned).
+4. `./mvnw -s settings.xml clean deploy -DskipTests`
+5. Update `fintrack.version` in `Auth_Service_FinTrack/pom.xml` and `Planning_Service_FinTrack/pom.xml` to match, and rebuild those repos.
+
+`settings.xml` (committed here, no secrets in it) wires `${env.GITHUB_ACTOR}`/`${env.GITHUB_TOKEN}` into Maven's `github` server credentials used by `<distributionManagement>` in `pom.xml`.
 
 ## Build
 

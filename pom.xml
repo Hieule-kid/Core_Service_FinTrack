@@ -28,6 +28,10 @@
         <maven.compiler.target>${java.version}</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
+        <!-- Override spring-boot-starter-parent's managed 1.18.36: too old for
+             this machine's JDK, causes "TypeTag :: UNKNOWN" in IDE tooling. -->
+        <lombok.version>1.18.46</lombok.version>
+
         <mapstruct.version>1.6.2</mapstruct.version>
     </properties>
 
@@ -96,5 +100,19 @@
             </plugin>
         </plugins>
     </build>
+
+    <!-- ============================================================
+         DISTRIBUTION — publish target for `mvn deploy`.
+         auth-service and planning-service resolve this artifact from
+         here instead of a git submodule/vendored copy. Requires a
+         GitHub Personal Access Token with write:packages — see README.
+         ============================================================ -->
+    <distributionManagement>
+        <repository>
+            <id>github</id>
+            <name>GitHub Packages</name>
+            <url>https://maven.pkg.github.com/Hieule-kid/Core_Service_FinTrack</url>
+        </repository>
+    </distributionManagement>
 
 </project>
