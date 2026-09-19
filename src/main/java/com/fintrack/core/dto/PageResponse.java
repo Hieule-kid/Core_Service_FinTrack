@@ -25,8 +25,6 @@ import java.util.List;
  * }</pre>
  *
  * @param <T> the element type of the content list
- * @author FinTrack Team
- * @since 1.0.0
  */
 @Getter
 @Builder
@@ -34,35 +32,18 @@ import java.util.List;
 @AllArgsConstructor
 public class PageResponse<T> {
 
-    /** The list of items for the current page. */
     private List<T> content;
 
-    /** Zero-based index of the current page. */
     private int pageNumber;
 
-    /** Number of items requested per page. */
     private int pageSize;
 
-    /** Total number of items across all pages. */
     private long totalElements;
 
-    /** Total number of pages available. */
     private int totalPages;
 
-    /** {@code true} if this is the last page. */
     private boolean last;
 
-    // ─────────────────────────────────────────────────────────────────────────
-    // Factory
-    // ─────────────────────────────────────────────────────────────────────────
-
-    /**
-     * Builds a {@link PageResponse} from a Spring Data {@link Page} object.
-     *
-     * @param page the Spring Data page containing content and metadata
-     * @param <T>  element type
-     * @return a fully populated {@link PageResponse}
-     */
     public static <T> PageResponse<T> of(Page<T> page) {
         return PageResponse.<T>builder()
                 .content(page.getContent())
@@ -74,4 +55,3 @@ public class PageResponse<T> {
                 .build();
     }
 }
-

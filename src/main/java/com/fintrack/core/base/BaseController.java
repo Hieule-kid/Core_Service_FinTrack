@@ -50,25 +50,12 @@ import org.springframework.web.bind.annotation.RequestParam;
  * @param <C> create request DTO type
  * @param <U> update request DTO type
  * @param <R> response DTO type
- * @author FinTrack Team
- * @since 1.0.0
  */
 @RequiredArgsConstructor
 public abstract class BaseController<C, U, R> {
 
-    /** The domain service that handles all business logic. */
     private final BaseService<C, U, R> service;
 
-    // ─────────────────────────────────────────────────────────────────────────
-    // CREATE
-    // ─────────────────────────────────────────────────────────────────────────
-
-    /**
-     * Creates a new resource.
-     *
-     * @param createRequest validated create payload
-     * @return {@code 201 Created} with the created resource
-     */
     @PostMapping
     public ResponseEntity<ApiResponse<R>> create(@Valid @RequestBody C createRequest) {
         R result = service.create(createRequest);
@@ -77,31 +64,12 @@ public abstract class BaseController<C, U, R> {
                 .body(ApiResponse.success(result, "Resource created successfully"));
     }
 
-    // ─────────────────────────────────────────────────────────────────────────
-    // READ
-    // ─────────────────────────────────────────────────────────────────────────
-
-    /**
-     * Retrieves a single resource by ID.
-     *
-     * @param id the resource's MongoDB ObjectId
-     * @return {@code 200 OK} with the resource
-     */
     @GetMapping("/{id}")
     public ResponseEntity<ApiResponse<R>> findById(@PathVariable String id) {
         R result = service.findById(id);
         return ResponseEntity.ok(ApiResponse.success(result));
     }
 
-    /**
-     * Returns a paginated, sorted list of resources.
-     *
-     * @param page    zero-based page index (default: 0)
-     * @param size    items per page (default: 10)
-     * @param sortBy  sort field (default: {@code "createdAt"})
-     * @param sortDir sort direction {@code "asc"} or {@code "desc"} (default: {@code "desc"})
-     * @return {@code 200 OK} with pagination metadata and content list
-     */
     @GetMapping
     public ResponseEntity<ApiResponse<PageResponse<R>>> findAll(
             @RequestParam(defaultValue = "0") int page,
@@ -112,17 +80,6 @@ public abstract class BaseController<C, U, R> {
         return ResponseEntity.ok(ApiResponse.success(result));
     }
 
-    // ─────────────────────────────────────────────────────────────────────────
-    // UPDATE
-    // ─────────────────────────────────────────────────────────────────────────
-
-    /**
-     * Updates an existing resource.
-     *
-     * @param id            the resource's MongoDB ObjectId
-     * @param updateRequest validated update payload
-     * @return {@code 200 OK} with the updated resource
-     */
     @PutMapping("/{id}")
     public ResponseEntity<ApiResponse<R>> update(
             @PathVariable String id,
@@ -131,20 +88,9 @@ public abstract class BaseController<C, U, R> {
         return ResponseEntity.ok(ApiResponse.success(result, "Resource updated successfully"));
     }
 
-    // ─────────────────────────────────────────────────────────────────────────
-    // DELETE (soft)
-    // ─────────────────────────────────────────────────────────────────────────
-
-    /**
-     * Soft-deletes a resource (sets {@code deleted = true}).
-     *
-     * @param id the resource's MongoDB ObjectId
-     * @return {@code 204 No Content}
-     */
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable String id) {
         service.delete(id);
         return ResponseEntity.noContent().build();
     }
 }
-

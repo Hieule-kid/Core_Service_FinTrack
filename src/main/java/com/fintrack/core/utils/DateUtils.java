@@ -13,8 +13,6 @@ import java.time.format.DateTimeFormatter;
  * <p>This class is stateless — all methods are {@code static}.
  * Do not instantiate it.
  *
- * @author FinTrack Team
- * @since 1.0.0
  */
 public final class DateUtils {
 
